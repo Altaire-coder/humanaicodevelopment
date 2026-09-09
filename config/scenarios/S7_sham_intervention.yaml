@@ -1,0 +1,16 @@
+scenario:
+  id: S7_sham_intervention
+  name: Sham intervention
+  description: YAML-driven Stage 6 scenario.
+  expected_mechanism: Test the specified intervention mechanism.
+  interaction:
+    action: none
+    ai_reuse_ratio: 0.75
+    trigger:
+      type: fixed_time
+      start_time: 25
+  platform:
+    action: none
+    trigger:
+      type: none
+

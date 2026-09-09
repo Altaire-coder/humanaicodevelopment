@@ -1,0 +1,22 @@
+analysis:
+  input_dir: outputs/results/simulation
+  output_dir: outputs/results/analysis
+  baseline_scenario: S0_no_treatment
+  last_n: 20
+  risk_threshold: 0.50
+  metrics:
+    - co_development_score
+    - co_degradation_score
+    - co_extinction_risk
+    - recursive_degradation_risk
+    - R_V
+    - R_N
+    - R_E
+    - NER
+    - recovery_probability
+    - mean_validity
+    - mean_novelty
+    - mean_alignment
+    - human_ai_reliance
+    - context_contamination
+    - model_contamination

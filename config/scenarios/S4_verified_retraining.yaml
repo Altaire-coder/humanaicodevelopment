@@ -1,0 +1,24 @@
+scenario:
+  id: S4_verified_retraining
+  name: Verified retraining
+  description: YAML-driven Stage 6 scenario.
+  expected_mechanism: Test the specified intervention mechanism.
+  interaction:
+    action: none
+    ai_reuse_ratio: 0.75
+    trigger:
+      type: none
+  platform:
+    action: verified_retraining
+    learning_enabled: true
+    learning_rate: 0.10
+    human_training_share: 0.35
+    ai_training_share: 0.15
+    verified_training_share: 0.50
+    trigger:
+      type: threshold
+      start_time: 20
+      threshold_metric: model_contamination
+      threshold_value: 0.35
+      cooldown: 20
+

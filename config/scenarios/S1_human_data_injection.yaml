@@ -1,0 +1,22 @@
+scenario:
+  id: S1_human_data_injection
+  name: Independent human data injection
+  description: YAML-driven Stage 6 scenario.
+  expected_mechanism: Test the specified intervention mechanism.
+  interaction:
+    action: human_data_injection
+    ai_reuse_ratio: 0.75
+    human_data_injection: 0.20
+    injected_data_validity: 0.90
+    injected_data_novelty: 0.80
+    injected_data_alignment: 0.95
+    source_independence: 1.00
+    trigger:
+      type: fixed_time
+      start_time: 25
+      cooldown: 5
+  platform:
+    action: none
+    trigger:
+      type: none
+

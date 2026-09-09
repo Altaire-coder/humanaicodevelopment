@@ -1,0 +1,36 @@
+scenario:
+  id: S6_adaptive_intervention
+  name: Adaptive intervention
+  description: Diagnose degradation and choose the least disruptive treatment.
+  expected_mechanism: Match treatment locus to causal mechanism.
+  diagnosis_enabled: true
+  adaptive_actions:
+    stable: none
+    local_context_contamination: context_reset
+    epistemic_inbreeding: human_data_injection
+    platform_contamination: verified_retraining
+    structural_utility_failure: critic_feedback
+    critical_failure: model_rollback
+  interaction:
+    action: none
+    ai_reuse_ratio: 0.75
+    human_data_injection: 0.20
+    critic_strength: 0.70
+    context_reset_strength: 0.80
+    trigger:
+      type: threshold
+      start_time: 10
+      threshold_metric: recursive_degradation_risk
+      threshold_value: 0.50
+      cooldown: 5
+  platform:
+    action: none
+    learning_enabled: true
+    rollback_steps: 2
+    verified_training_share: 0.50
+    trigger:
+      type: threshold
+      start_time: 20
+      threshold_metric: recursive_degradation_risk
+      threshold_value: 0.65
+      cooldown: 10

@@ -1,0 +1,21 @@
+scenario:
+  id: S5_model_rollback
+  name: Model rollback
+  description: YAML-driven Stage 6 scenario.
+  expected_mechanism: Test the specified intervention mechanism.
+  interaction:
+    action: none
+    ai_reuse_ratio: 0.75
+    trigger:
+      type: none
+  platform:
+    action: model_rollback
+    learning_enabled: true
+    rollback_steps: 2
+    trigger:
+      type: threshold
+      start_time: 30
+      threshold_metric: co_extinction_risk
+      threshold_value: 0.70
+      cooldown: 25
+

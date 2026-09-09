@@ -1,0 +1,34 @@
+validation:
+  stage_dir: outputs/results/simulation
+  output_dir: outputs/results/validation
+  steps: 100
+  quick_runs: 10
+  paper_runs: 30
+
+  windows:
+    - 10
+    - 20
+    - 30
+
+  recommended_quick_oat_parameters:
+    - verification
+    - sycophancy
+    - ai_reuse_ratio
+    - reset_threshold
+
+  recommended_full_oat_parameters:
+    - human_accuracy
+    - ai_accuracy
+    - verification
+    - sycophancy
+    - ai_reuse_ratio
+    - mutation_rate
+    - reset_threshold
+    - context_reset_strength
+
+  recommended_factorial_parameters:
+    - human_accuracy
+    - ai_accuracy
+    - verification
+    - sycophancy
+    - ai_reuse_ratio

@@ -1,0 +1,15 @@
+scenario:
+  id: S0_no_treatment
+  name: No treatment
+  description: YAML-driven Stage 6 scenario.
+  expected_mechanism: Test the specified intervention mechanism.
+  interaction:
+    action: none
+    ai_reuse_ratio: 0.75
+    trigger:
+      type: none
+  platform:
+    action: none
+    trigger:
+      type: none
+

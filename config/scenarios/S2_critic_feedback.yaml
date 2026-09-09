@@ -1,0 +1,23 @@
+scenario:
+  id: S2_critic_feedback
+  name: Critic feedback
+  description: YAML-driven Stage 6 scenario.
+  expected_mechanism: Test the specified intervention mechanism.
+  interaction:
+    action: critic_feedback
+    ai_reuse_ratio: 0.75
+    critic_strength: 0.70
+    counterfactual_strength: 0.60
+    uncertainty_flagging: 0.60
+    intention_anchor_strength: 0.80
+    trigger:
+      type: threshold
+      start_time: 10
+      threshold_metric: repetition_rate
+      threshold_value: 0.50
+      cooldown: 5
+  platform:
+    action: none
+    trigger:
+      type: none
+

@@ -1,0 +1,43 @@
+simulation:
+  seed: 42
+  runs: 100
+  steps: 100
+  num_humans: 100
+  num_ai_agents: 3
+  initial_ideas: 50
+
+human:
+  accuracy_mean: 0.70
+  accuracy_sd: 0.10
+  novelty_mean: 0.55
+  verification_mean: 0.45
+  confirmation_bias_mean: 0.35
+  ai_reliance_mean: 0.50
+  confidence_calibration_mean: 0.65
+
+ai:
+  accuracy_mean: 0.80
+  generative_breadth_mean: 0.65
+  sycophancy_mean: 0.30
+  memory_strength_mean: 0.60
+  personalization_mean: 0.50
+  confidence_calibration_mean: 0.70
+
+idea:
+  mutation_rate: 0.05
+  beneficial_mutation_share: 0.30
+  deleterious_mutation_share: 0.35
+  copying_fidelity: 0.90
+  minimum_validity: 0.60
+
+platform:
+  interaction_data_reuse: 0.50
+  ai_generated_training_share: 0.40
+  update_interval: 10
+
+intervention:
+  policy: none
+  threshold: 0.65
+  human_data_injection: 0.20
+  reset_strength: 0.50
+  retraining_verified_share: 0.50

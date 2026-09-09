@@ -1,0 +1,15 @@
+experiment:
+  scenarios:
+    - config/scenarios/S0_no_treatment.yaml
+    - config/scenarios/S1_human_data_injection.yaml
+    - config/scenarios/S2_critic_feedback.yaml
+    - config/scenarios/S3_context_reset.yaml
+
+  monte_carlo:
+    runs_per_scenario: 100
+    base_seed: 5000
+    steps: 100
+    matched_seeds: true
+
+  outputs:
+    directory: outputs/results/simulation

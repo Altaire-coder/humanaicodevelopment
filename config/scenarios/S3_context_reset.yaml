@@ -1,0 +1,20 @@
+scenario:
+  id: S3_context_reset
+  name: Context reset
+  description: YAML-driven Stage 6/7 scenario with moderate context-reset policy.
+  expected_mechanism: Trigger local context reset only after meaningful context contamination accumulates, while preserving enough interaction memory for continuity.
+  interaction:
+    action: context_reset
+    ai_reuse_ratio: 0.75
+    context_reset_strength: 0.50
+    preserve_verified_summary: true
+    trigger:
+      type: threshold
+      start_time: 15
+      threshold_metric: context_contamination
+      threshold_value: 0.02
+      cooldown: 15
+  platform:
+    action: none
+    trigger:
+      type: none
