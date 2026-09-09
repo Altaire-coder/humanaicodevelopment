@@ -1,0 +1,16 @@
+numpy
+pandas
+scipy
+scikit-learn
+networkx
+matplotlib
+plotly
+streamlit
+pyyaml
+pydantic
+pyarrow
+statsmodels
+lifelines
+SALib
+tqdm
+pytest
