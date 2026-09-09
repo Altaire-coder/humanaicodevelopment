@@ -1,0 +1,162 @@
+from __future__ import annotations
+
+import argparse
+from pathlib import Path
+
+import pandas as pd
+import yaml
+
+from src.environment import RecursiveModelConfig, run_recursive_interaction
+from src.scenarios import ScenarioRuntime, load_scenario
+
+
+OUTPUT_TABLES = (
+    "events",
+    "idea_states",
+    "human_states",
+    "ai_states",
+    "local_ai_states",
+    "platform_states",
+    "platform_update_events",
+    "lineage_edges",
+)
+
+
+def load_experiment(path: str) -> dict:
+    with open(path, "r", encoding="utf-8") as handle:
+        return yaml.safe_load(handle)
+
+
+def _combine_frames(frames: list[pd.DataFrame]) -> pd.DataFrame:
+    nonempty = [frame for frame in frames if not frame.empty]
+    if nonempty:
+        return pd.concat(nonempty, ignore_index=True)
+
+    return pd.DataFrame()
+
+
+def _empty_platform_update_events() -> pd.DataFrame:
+    return pd.DataFrame(
+        columns=[
+            "run_id",
+            "matched_run_id",
+            "scenario_id",
+            "time",
+            "event_type",
+            "update_reason",
+            "sample_size",
+            "eligible_event_count",
+            "sample_validity",
+            "sample_novelty",
+            "sample_error",
+            "sample_ai_origin_share",
+            "model_version_before",
+            "model_version_after",
+        ]
+    )
+
+
+def _annotate_run_identity(
+    frame: pd.DataFrame,
+    *,
+    matched_run_id: str,
+    scenario_index: int,
+    run_index: int,
+    seed: int,
+) -> pd.DataFrame:
+    if frame.empty:
+        return frame
+
+    out = frame.copy()
+    out["matched_run_id"] = matched_run_id
+    out["scenario_index"] = scenario_index
+    out["run_index"] = run_index
+    out["seed"] = seed
+    return out
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--config",
+        default="config/scenario_experiment.yaml",
+    )
+    args = parser.parse_args()
+
+    raw = load_experiment(args.config)["experiment"]
+    output_dir = Path(raw["outputs"]["directory"])
+    output_dir.mkdir(parents=True, exist_ok=True)
+
+    runs = int(raw["monte_carlo"]["runs_per_scenario"])
+    steps = int(raw["monte_carlo"]["steps"])
+    base_seed = int(raw["monte_carlo"]["base_seed"])
+    matched_seeds = bool(raw["monte_carlo"].get("matched_seeds", True))
+
+    collected: dict[str, list[pd.DataFrame]] = {
+        name: [] for name in OUTPUT_TABLES
+    }
+
+    for scenario_index, path in enumerate(raw["scenarios"]):
+        scenario = load_scenario(path)
+
+        for run_index in range(runs):
+            matched_run_id = f"R{run_index + 1:05d}"
+            if matched_seeds:
+                seed = base_seed + run_index
+            else:
+                seed = base_seed + scenario_index * 100000 + run_index
+
+            config = RecursiveModelConfig(
+                num_steps=steps,
+                seed=seed,
+                run_id=f"{scenario.id}_{matched_run_id}",
+                scenario_id=scenario.id,
+                ai_feedback_reuse=scenario.interaction.ai_reuse_ratio,
+                platform_learning_enabled=scenario.platform.learning_enabled,
+                platform_update_interval=scenario.platform.update_interval,
+                platform_interaction_sampling_rate=(
+                    scenario.platform.interaction_sampling_rate
+                ),
+                platform_learning_rate=scenario.platform.learning_rate,
+            )
+
+            result = run_recursive_interaction(
+                config,
+                scenario_runtime=ScenarioRuntime(scenario),
+            )
+            frames = result.as_frames()
+
+            missing = set(OUTPUT_TABLES) - set(frames)
+            if missing:
+                raise KeyError(
+                    "RecursiveSimulationResult.as_frames() is missing "
+                    f"Stage 7 tables: {sorted(missing)}"
+                )
+
+            for name in OUTPUT_TABLES:
+                collected[name].append(
+                    _annotate_run_identity(
+                        frames[name],
+                        matched_run_id=matched_run_id,
+                        scenario_index=scenario_index,
+                        run_index=run_index,
+                        seed=seed,
+                    )
+                )
+
+    for name in OUTPUT_TABLES:
+        combined = _combine_frames(collected[name])
+        path = output_dir / f"{name}.parquet"
+
+        if name == "platform_update_events" and combined.empty:
+            combined = _empty_platform_update_events()
+
+        combined.to_parquet(path, index=False)
+        print(f"{name}: {len(combined):,} rows")
+
+    print(f"Saved scenario outputs to {output_dir.resolve()}")
+    print(f"matched_seeds: {matched_seeds}")
+
+
+if __name__ == "__main__":
+    main()
