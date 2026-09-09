@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "human-ai-codevelopment-sim"
+version = "0.1.0"
+description = "Reproducible simulation package for recursive human-AI codevelopment feedback loops"
+requires-python = ">=3.10"
+dependencies = [
+    "numpy",
+    "pandas",
+    "scipy",
+    "scikit-learn",
+    "networkx",
+    "matplotlib",
+    "plotly",
+    "streamlit",
+    "pyyaml",
+    "pydantic",
+    "pyarrow",
+    "statsmodels",
+    "lifelines",
+    "SALib",
+    "tqdm",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
